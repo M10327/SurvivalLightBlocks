@@ -1,0 +1,8 @@
+name: SurvivalLightBlocks
+version: '${project.version}'
+main: survivallightblocks.survivallightblocks.SurvivalLightBlocks
+api-version: 1.19
+prefix: SurvivalLight
+authors: [ Melodylux ]
+description: Craftable and customizeable light blocks in survival
+depend: [NBTAPI]
