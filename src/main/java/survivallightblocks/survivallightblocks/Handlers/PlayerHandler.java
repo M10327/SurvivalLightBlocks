@@ -3,10 +3,7 @@ package survivallightblocks.survivallightblocks.Handlers;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.type.Light;
@@ -99,6 +96,9 @@ public class PlayerHandler implements Listener {
             return;
         }
         if (event.getItem().getType() != Material.LIGHT){
+            return;
+        }
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL){
             return;
         }
         if (block.getType() == Material.LIGHT){
