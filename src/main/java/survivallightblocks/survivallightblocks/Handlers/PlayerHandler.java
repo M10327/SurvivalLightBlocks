@@ -4,11 +4,20 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
+import org.bukkit.block.data.type.Light;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import survivallightblocks.survivallightblocks.SurvivalLightBlocks;
 
@@ -71,5 +80,46 @@ public class PlayerHandler implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    private void PlayerLeftClick(PlayerInteractEvent event){
+        Block block = event.getClickedBlock();
+        Player player = event.getPlayer();
+        if (block == null){
+            return;
+        }
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK){
+            return;
+        }
+        if (event.getHand() != EquipmentSlot.HAND){
+            return;
+        }
+        if (event.getItem() == null){
+            return;
+        }
+        if (event.getItem().getType() != Material.LIGHT){
+            return;
+        }
+        if (block.getType() == Material.LIGHT){
+            if (CanBreakBlock(block, player)){
+                block.getWorld().playSound(block.getLocation(), Sound.BLOCK_GLASS_BREAK, 0.5F, 1.0F);
+                block.getWorld().playEffect(block.getLocation(), Effect.EXTINGUISH, 0);
+                // item that drops when broken
+                Levelled light = (Levelled) block.getBlockData();
+                ItemStack item = new ItemStack(Material.LIGHT,1);
+                NBTItem nbti = new NBTItem(item);
+                nbti.mergeCompound(new NBTContainer("{BlockStateTag: {level: " + light.getLevel() + "}}"));
+                block.getWorld().dropItemNaturally(block.getLocation(), nbti.getItem());
+                // end item
+                block.breakNaturally();
+            }
+        }
+    }
+
+    private boolean CanBreakBlock(Block block, Player player){
+        BlockBreakEvent event = new BlockBreakEvent(block, player);
+        Bukkit.getPluginManager().callEvent(event);
+        return !event.isCancelled();
     }
 }
