@@ -1,0 +1,9 @@
+craftEnable: true
+resultAmount: 64
+recipeShape:
+  - " G "
+  - "GIG"
+  - " G "
+recipeIngredients:
+  G: GLOWSTONE
+  I: IRON_BLOCK
