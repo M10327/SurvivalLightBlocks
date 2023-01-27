@@ -1,5 +1,7 @@
 package survivallightblocks.survivallightblocks.Utils;
 
+import de.tr7zw.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.MemorySection;
@@ -27,7 +29,10 @@ public class RecipeManager {
         if (plugin.configManager.craftIsEnable()){
             int resultAmount = plugin.configManager.getResultAmount();
             ItemStack result = new ItemStack(Material.LIGHT, resultAmount);
-            ShapedRecipe recipe = new ShapedRecipe(key, result);
+            NBTItem nbti = new NBTItem(result);
+            nbti.mergeCompound(new NBTContainer("{BlockStateTag: {level: 15}}"));
+            ItemStack resultWithNbt = nbti.getItem();
+            ShapedRecipe recipe = new ShapedRecipe(key, resultWithNbt);
             List<String> recipeShape = plugin.configManager.getRecipeShape();
             recipe.shape(recipeShape.toArray(new String[0]));
             MemorySection recipeIngredients = plugin.configManager.getRecipeIngredients();
