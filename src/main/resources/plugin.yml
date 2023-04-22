@@ -6,3 +6,6 @@ prefix: SurvivalLight
 authors: [ Melodylux ]
 description: Craftable and customizeable light blocks in survival
 depend: [NBTAPI]
+commands:
+  SurvivalLightBlock.reload:
+    usage: "config reloaded"

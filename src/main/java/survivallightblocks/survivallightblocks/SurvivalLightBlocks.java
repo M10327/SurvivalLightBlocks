@@ -1,30 +1,24 @@
 package survivallightblocks.survivallightblocks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import survivallightblocks.survivallightblocks.Handlers.PlayerHandler;
+import survivallightblocks.survivallightblocks.Utils.CommandController;
+import survivallightblocks.survivallightblocks.Utils.ConfigManager;
+import survivallightblocks.survivallightblocks.Utils.RecipeManager;
 
 public final class SurvivalLightBlocks extends JavaPlugin {
-
+    public ConfigManager configManager;
+    public RecipeManager recipeManager;
     @Override
     public void onEnable() {
+        configManager = new ConfigManager(this);
+        recipeManager = new RecipeManager(this);
+        this.getCommand("SurvivalLightBlock.reload").setExecutor(new CommandController(this));
         new PlayerHandler(this);
-
-        ItemStack result = new ItemStack(Material.LIGHT, 64);
-        NamespacedKey key = new NamespacedKey(this, "lightBlock");
-        ShapedRecipe recipe = new ShapedRecipe(key, result);
-        recipe.shape(" G ", "GIG", " G ");
-        recipe.setIngredient('G', Material.GLOWSTONE);
-        recipe.setIngredient('I', Material.IRON_BLOCK);
-        Bukkit.addRecipe(recipe);
     }
 
     @Override
     public void onDisable() {
-        Bukkit.removeRecipe(new NamespacedKey(this, "lightBlock"));
+        recipeManager.removeRecipe();
     }
 }
